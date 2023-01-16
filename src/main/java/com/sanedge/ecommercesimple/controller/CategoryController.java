@@ -19,31 +19,31 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sanedge.ecommercesimple.payload.request.CategoryRequest;
 import com.sanedge.ecommercesimple.payload.response.CategoryResponse;
 import com.sanedge.ecommercesimple.payload.response.MessageResponse;
-import com.sanedge.ecommercesimple.service.CategoryService;
+import com.sanedge.ecommercesimple.service.impl.CategoryServiceImpl;
 
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
     @Autowired
-    CategoryService categoryService;
+    CategoryServiceImpl categoryServiceImpl;
 
     @PostMapping
     public ResponseEntity<MessageResponse> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
-        MessageResponse createMessageResponse = this.categoryService.create(categoryRequest);
+        MessageResponse createMessageResponse = this.categoryServiceImpl.create(categoryRequest);
 
         return new ResponseEntity<>(createMessageResponse, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> findAll() {
-        List<CategoryResponse> categoryResponse = this.categoryService.findAll();
+        List<CategoryResponse> categoryResponse = this.categoryServiceImpl.findAll();
 
         return new ResponseEntity<List<CategoryResponse>>(categoryResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> findById(@PathVariable Long id) {
-        CategoryResponse categoryResponse = this.categoryService.findById(id);
+        CategoryResponse categoryResponse = this.categoryServiceImpl.findById(id);
 
         return new ResponseEntity<CategoryResponse>(categoryResponse, HttpStatus.OK);
     }
@@ -51,14 +51,14 @@ public class CategoryController {
     @PutMapping("/{id}")
     public ResponseEntity<MessageResponse> updateById(@PathVariable Long id,
             @Valid @RequestBody CategoryRequest categoryRequest) {
-        MessageResponse updatMessageResponse = this.categoryService.update(id, categoryRequest);
+        MessageResponse updatMessageResponse = this.categoryServiceImpl.update(id, categoryRequest);
 
         return new ResponseEntity<MessageResponse>(updatMessageResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponse> deleteById(@PathVariable Long id) {
-        MessageResponse deletMessageResponse = this.categoryService.delete(id);
+        MessageResponse deletMessageResponse = this.categoryServiceImpl.delete(id);
 
         return new ResponseEntity<>(deletMessageResponse, HttpStatus.OK);
     }

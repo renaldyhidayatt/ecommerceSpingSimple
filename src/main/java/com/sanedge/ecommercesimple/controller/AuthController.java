@@ -15,25 +15,25 @@ import com.sanedge.ecommercesimple.payload.request.LoginRequest;
 import com.sanedge.ecommercesimple.payload.request.RegisterRequest;
 import com.sanedge.ecommercesimple.payload.response.AuthenticationResponse;
 import com.sanedge.ecommercesimple.payload.response.MessageResponse;
-import com.sanedge.ecommercesimple.service.AuthService;
+import com.sanedge.ecommercesimple.service.impl.AuthServiceImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
-    AuthService authService;
+    AuthServiceImpl authServiceImpl;
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        AuthenticationResponse authResponse = this.authService.login(loginRequest);
+        AuthenticationResponse authResponse = this.authServiceImpl.login(loginRequest);
 
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
     @PostMapping("/register")
     public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        MessageResponse authMessageResponse = this.authService.register(registerRequest);
+        MessageResponse authMessageResponse = this.authServiceImpl.register(registerRequest);
 
         return new ResponseEntity<>(authMessageResponse, HttpStatus.OK);
     }

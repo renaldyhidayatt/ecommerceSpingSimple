@@ -18,31 +18,31 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sanedge.ecommercesimple.payload.request.OrderRequest;
 import com.sanedge.ecommercesimple.payload.response.MessageResponse;
 import com.sanedge.ecommercesimple.payload.response.OrderResponse;
-import com.sanedge.ecommercesimple.service.OrderService;
+import com.sanedge.ecommercesimple.service.impl.OrderServiceImpl;
 
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
     @Autowired
-    OrderService orderService;
+    OrderServiceImpl orderServiceImpl;
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> findAll() {
-        List<OrderResponse> orderResponse = this.orderService.findAll();
+        List<OrderResponse> orderResponse = this.orderServiceImpl.findAll();
 
         return new ResponseEntity<List<OrderResponse>>(orderResponse, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest request) {
-        OrderResponse orderResponse = this.orderService.createOrder(request);
+        OrderResponse orderResponse = this.orderServiceImpl.createOrder(request);
 
         return new ResponseEntity<OrderResponse>(orderResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponse> deleteByid(@PathVariable Long id) {
-        MessageResponse orderResponse = this.orderService.delete(id);
+        MessageResponse orderResponse = this.orderServiceImpl.delete(id);
 
         return new ResponseEntity<MessageResponse>(orderResponse, HttpStatus.OK);
     }

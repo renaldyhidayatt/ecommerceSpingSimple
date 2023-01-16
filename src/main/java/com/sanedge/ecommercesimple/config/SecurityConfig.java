@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.sanedge.ecommercesimple.security.AuthTokenEntryPoint;
 import com.sanedge.ecommercesimple.security.AuthTokenFilter;
-import com.sanedge.ecommercesimple.service.UserDetailImplService;
+import com.sanedge.ecommercesimple.service.impl.UserDetailImplService;
 
 @Configuration
 @EnableWebSecurity

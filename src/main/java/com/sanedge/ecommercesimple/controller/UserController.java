@@ -18,39 +18,39 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sanedge.ecommercesimple.payload.request.RegisterRequest;
 import com.sanedge.ecommercesimple.payload.response.MessageResponse;
 import com.sanedge.ecommercesimple.payload.response.UserResponse;
-import com.sanedge.ecommercesimple.service.UserService;
+import com.sanedge.ecommercesimple.service.impl.UserServiceImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
     @Autowired
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
     @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody RegisterRequest registerRequest) {
-        MessageResponse creatMessageResponse = this.userService.create(registerRequest);
+        MessageResponse creatMessageResponse = this.userServiceImpl.create(registerRequest);
 
         return new ResponseEntity<>(creatMessageResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        UserResponse _user = this.userService.getUser(id);
+        UserResponse _user = this.userServiceImpl.getUser(id);
 
         return new ResponseEntity<>(_user, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @RequestBody RegisterRequest registerRequest) {
-        MessageResponse updatMessageResponse = this.userService.updateById(id, registerRequest);
+        MessageResponse updatMessageResponse = this.userServiceImpl.updateById(id, registerRequest);
 
         return new ResponseEntity<>(updatMessageResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        MessageResponse deletMessageResponse = this.userService.deleteById(id);
+        MessageResponse deletMessageResponse = this.userServiceImpl.deleteById(id);
 
         return new ResponseEntity<>(deletMessageResponse, HttpStatus.OK);
     }

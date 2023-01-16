@@ -1,4 +1,4 @@
-package com.sanedge.ecommercesimple.service;
+package com.sanedge.ecommercesimple.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
