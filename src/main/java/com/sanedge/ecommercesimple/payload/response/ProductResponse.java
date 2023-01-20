@@ -3,6 +3,8 @@ package com.sanedge.ecommercesimple.payload.response;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import com.sanedge.ecommercesimple.models.Category;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +22,7 @@ public class ProductResponse {
     private List<String> images;
     private String brand;
     private double price;
-    private CategoryResponse category;
+    private Category category;
     private int countInStock;
     private double rating;
     private int numReviews;

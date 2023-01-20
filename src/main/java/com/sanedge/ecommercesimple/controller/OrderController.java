@@ -27,17 +27,17 @@ public class OrderController {
     OrderServiceImpl orderServiceImpl;
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> findAll() {
-        List<OrderResponse> orderResponse = this.orderServiceImpl.findAll();
+    public ResponseEntity<MessageResponse> findAll() {
+        MessageResponse orderResponse = this.orderServiceImpl.findAll();
 
-        return new ResponseEntity<List<OrderResponse>>(orderResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(orderResponse, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest request) {
-        OrderResponse orderResponse = this.orderServiceImpl.createOrder(request);
+    public ResponseEntity<MessageResponse> create(@Valid @RequestBody OrderRequest request) {
+        MessageResponse orderResponse = this.orderServiceImpl.createOrder(request);
 
-        return new ResponseEntity<OrderResponse>(orderResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(orderResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

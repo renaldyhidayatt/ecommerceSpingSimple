@@ -1,12 +1,12 @@
 package com.sanedge.ecommercesimple.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sanedge.ecommercesimple.convert.ProductToDto;
 import com.sanedge.ecommercesimple.exception.ResourceNotFoundException;
 import com.sanedge.ecommercesimple.models.Category;
 import com.sanedge.ecommercesimple.models.Product;
@@ -22,22 +22,41 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final ProductToDto productToDto;
     private final FileStorageImpl fileStorageImplService;
 
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository,
-            ProductToDto productToDto, FileStorageImpl fileStorageImplService) {
+            FileStorageImpl fileStorageImplService) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
-        this.productToDto = productToDto;
         this.fileStorageImplService = fileStorageImplService;
     }
 
-    public List<ProductResponse> findAll() {
+    public MessageResponse findAll() {
         List<Product> products = this.productRepository.findAll();
+        List<ProductResponse> productResponses = new ArrayList<>();
 
-        return this.productToDto.mapProductToDtos(products);
+        for (Product product : products) {
+            ProductResponse productResponse = new ProductResponse();
+            productResponse.setName(product.getName());
+            productResponse.setDescription(product.getDescription());
+            productResponse.setRichDescription(product.getDescription());
+            productResponse.setImage(product.getImage());
+            productResponse.setBrand(product.getBrand());
+            productResponse.setPrice(product.getPrice());
+            productResponse.setCountInStock(product.getCountInStock());
+            productResponse.setRating(product.getRating());
+            productResponse.setNumReviews(product.getNumReviews());
+            productResponse.setFeatured(product.getIsFeatured());
+            productResponse.setCategory(product.getCategory());
+            productResponse.setCreatedAt(product.getCreatedAt());
+            productResponse.setUpdatedAt(product.getUpdatedAt());
+
+            productResponses.add(productResponse);
+        }
+
+        return MessageResponse.builder().message("Berhasil mendapatkan data").data(productResponses).statusCode(200)
+                .build();
     }
 
     public MessageResponse createProduct(ProductRequest product, MultipartFile file) {
@@ -62,18 +81,18 @@ public class ProductServiceImpl implements ProductService {
 
         this.productRepository.save(_product);
 
-        return MessageResponse.builder().message("SUccess create product").build();
+        return MessageResponse.builder().message("Berhasil membuat product").data(product).statusCode(200).build();
     }
 
-    public ProductResponse getProductById(long id) {
+    public MessageResponse getProductById(long id) {
         Product _product = this.productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Not found Product id"));
 
-        return this.productToDto.mapProductToDto(_product);
+        return MessageResponse.builder().message("Berhasil mendapatkan data").data(_product).statusCode(200).build();
 
     }
 
-    public Product updateById(long id, ProductRequest productRequest, MultipartFile file) {
+    public MessageResponse updateById(long id, ProductRequest productRequest, MultipartFile file) {
 
         Product _product = this.productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Not found Product id"));
@@ -99,8 +118,7 @@ public class ProductServiceImpl implements ProductService {
 
         this.productRepository.save(_product);
 
-        return _product;
-
+        return MessageResponse.builder().message("Berhasil update data").data(_product).statusCode(200).build();
     }
 
     public MessageResponse delete(long id) {
@@ -112,6 +130,6 @@ public class ProductServiceImpl implements ProductService {
 
         this.productRepository.delete(_product);
 
-        return MessageResponse.builder().message("Success delete product").build();
+        return MessageResponse.builder().message("Success delete product").statusCode(200).build();
     }
 }

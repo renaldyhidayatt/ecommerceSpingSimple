@@ -36,25 +36,25 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> findAll() {
-        List<ProductResponse> productResponse = this.productServiceImpl.findAll();
+    public ResponseEntity<MessageResponse> findAll() {
+        MessageResponse productResponse = this.productServiceImpl.findAll();
 
-        return new ResponseEntity<List<ProductResponse>>(productResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(productResponse, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateById(@PathVariable long id, ProductRequest productRequest,
+    public ResponseEntity<MessageResponse> updateById(@PathVariable long id, ProductRequest productRequest,
             MultipartFile file) {
-        Product productResponse = this.productServiceImpl.updateById(id, productRequest, file);
+        MessageResponse productResponse = this.productServiceImpl.updateById(id, productRequest, file);
 
-        return new ResponseEntity<Product>(productResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(productResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> findById(@PathVariable long id) {
-        ProductResponse productResponse = this.productServiceImpl.getProductById(id);
+    public ResponseEntity<MessageResponse> findById(@PathVariable long id) {
+        MessageResponse productResponse = this.productServiceImpl.getProductById(id);
 
-        return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(productResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

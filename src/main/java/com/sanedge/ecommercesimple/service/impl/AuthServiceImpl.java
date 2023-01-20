@@ -60,8 +60,9 @@ public class AuthServiceImpl implements AuthService {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        return AuthenticationResponse.builder().authenticationToken(jwt).expiresAt(date.toString())
-                .username(userDetails.getUsername()).build();
+        return AuthenticationResponse.builder().message("Berhasil login").authenticationToken(jwt)
+                .expiresAt(date.toString())
+                .username(userDetails.getUsername()).statusCode(200).build();
     }
 
     public MessageResponse register(RegisterRequest registerRequest) {
@@ -102,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
         this.userRepository.save(user);
 
-        return MessageResponse.builder().message("Successs create user").build();
+        return MessageResponse.builder().message("Successs create user").data(user).statusCode(200).build();
 
     }
 
@@ -110,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return userRepository.findByUsername(authentication.getName())
+        return this.userRepository.findByUsername(authentication.getName())
                 .orElseThrow(
                         () -> new UsernameNotFoundException("User name not found - " + authentication.getName()));
     }

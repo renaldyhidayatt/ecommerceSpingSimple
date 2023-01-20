@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sanedge.ecommercesimple.payload.request.CategoryRequest;
-import com.sanedge.ecommercesimple.payload.response.CategoryResponse;
 import com.sanedge.ecommercesimple.payload.response.MessageResponse;
 import com.sanedge.ecommercesimple.service.impl.CategoryServiceImpl;
 
@@ -35,17 +34,17 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> findAll() {
-        List<CategoryResponse> categoryResponse = this.categoryServiceImpl.findAll();
+    public ResponseEntity<MessageResponse> findAll() {
+        MessageResponse categoryResponse = this.categoryServiceImpl.findAll();
 
-        return new ResponseEntity<List<CategoryResponse>>(categoryResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(categoryResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> findById(@PathVariable Long id) {
-        CategoryResponse categoryResponse = this.categoryServiceImpl.findById(id);
+    public ResponseEntity<MessageResponse> findById(@PathVariable Long id) {
+        MessageResponse categoryResponse = this.categoryServiceImpl.findById(id);
 
-        return new ResponseEntity<CategoryResponse>(categoryResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(categoryResponse, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

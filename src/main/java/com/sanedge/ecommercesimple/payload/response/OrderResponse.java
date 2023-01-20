@@ -2,6 +2,8 @@ package com.sanedge.ecommercesimple.payload.response;
 
 import java.util.List;
 
+import com.sanedge.ecommercesimple.models.OrderItem;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,5 +29,5 @@ public class OrderResponse {
 
     private String status;
 
-    private List<OrderItemResponse> orderItems;
+    private List<OrderItem> orderItems;
 }

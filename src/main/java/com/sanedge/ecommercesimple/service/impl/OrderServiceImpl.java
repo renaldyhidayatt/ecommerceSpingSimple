@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sanedge.ecommercesimple.convert.OrderToDto;
 import com.sanedge.ecommercesimple.exception.ResourceNotFoundException;
 import com.sanedge.ecommercesimple.models.Order;
 import com.sanedge.ecommercesimple.models.OrderItem;
@@ -26,32 +25,41 @@ public class OrderServiceImpl implements OrderService {
     private final AuthServiceImpl authImplService;
     private final ProductRepository productRepository;
     private final OrderitemRepository orderitemRepository;
-    private final OrderToDto orderToDto;
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, AuthServiceImpl authImplService,
-            ProductRepository productRepository, OrderitemRepository orderitemRepository, OrderToDto orderToDto) {
+            ProductRepository productRepository, OrderitemRepository orderitemRepository) {
         this.orderRepository = orderRepository;
         this.authImplService = authImplService;
         this.productRepository = productRepository;
         this.orderitemRepository = orderitemRepository;
-        this.orderToDto = orderToDto;
     }
 
-    public List<OrderResponse> findAll() {
+    public MessageResponse findAll() {
         List<Order> orderAll = this.orderRepository.findAll();
+        List<OrderResponse> orderResponses = new ArrayList<>();
 
-        return this.orderToDto.mapOrderToDtos(orderAll);
+        for (Order order : orderAll) {
+            OrderResponse orderResponse = new OrderResponse(
+                    order.getId(), order.getShippingAddress1(), order.getShippingAddress2(), order.getCity(),
+                    order.getZip(),
+                    order.getCountry(), order.getPhone(), order.getStatus(), order.getOrderItems());
+
+            orderResponses.add(orderResponse);
+        }
+
+        return MessageResponse.builder().message("Berhasil mendapatkan data").data(orderResponses).statusCode(200)
+                .build();
     }
 
-    public OrderResponse findById(long id) {
+    public MessageResponse findById(long id) {
         Order orderById = this.orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found order by id"));
 
-        return this.orderToDto.mapOrderToDto(orderById);
+        return MessageResponse.builder().message("Berhasil mendapatkan data").data(orderById).statusCode(200).build();
     }
 
-    public OrderResponse createOrder(OrderRequest request) {
+    public MessageResponse createOrder(OrderRequest request) {
         Order _order = new Order();
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -87,7 +95,7 @@ public class OrderServiceImpl implements OrderService {
         _order.setOrderItems(orderItems);
         this.orderRepository.save(_order);
 
-        return this.orderToDto.mapOrderToDto(_order);
+        return MessageResponse.builder().message("Berhasil membuat order").data(_order).statusCode(200).build();
 
     }
 
@@ -100,6 +108,6 @@ public class OrderServiceImpl implements OrderService {
         }
         this.orderRepository.delete(orderById);
 
-        return MessageResponse.builder().message("Delete success ").build();
+        return MessageResponse.builder().message("Delete success ").statusCode(200).build();
     }
 }

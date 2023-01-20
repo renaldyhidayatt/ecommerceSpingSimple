@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sanedge.ecommercesimple.payload.request.RegisterRequest;
 import com.sanedge.ecommercesimple.payload.response.MessageResponse;
-import com.sanedge.ecommercesimple.payload.response.UserResponse;
 import com.sanedge.ecommercesimple.service.impl.UserServiceImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -28,30 +27,31 @@ public class UserController {
     UserServiceImpl userServiceImpl;
 
     @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<MessageResponse> createUser(@Valid @RequestBody RegisterRequest registerRequest) {
         MessageResponse creatMessageResponse = this.userServiceImpl.create(registerRequest);
 
-        return new ResponseEntity<>(creatMessageResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(creatMessageResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        UserResponse _user = this.userServiceImpl.getUser(id);
+    public ResponseEntity<MessageResponse> getUserById(@PathVariable Long id) {
+        MessageResponse _user = this.userServiceImpl.getUser(id);
 
-        return new ResponseEntity<>(_user, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(_user, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<MessageResponse> updateUser(@PathVariable Long id,
+            @Valid @RequestBody RegisterRequest registerRequest) {
         MessageResponse updatMessageResponse = this.userServiceImpl.updateById(id, registerRequest);
 
-        return new ResponseEntity<>(updatMessageResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(updatMessageResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<MessageResponse> deleteUser(@PathVariable Long id) {
         MessageResponse deletMessageResponse = this.userServiceImpl.deleteById(id);
 
-        return new ResponseEntity<>(deletMessageResponse, HttpStatus.OK);
+        return new ResponseEntity<MessageResponse>(deletMessageResponse, HttpStatus.OK);
     }
 }

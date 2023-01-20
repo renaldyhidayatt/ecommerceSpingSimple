@@ -9,4 +9,6 @@ import lombok.Data;
 @Builder
 public class MessageResponse {
     private String message;
+    private Object data;
+    private Integer statusCode;
 }

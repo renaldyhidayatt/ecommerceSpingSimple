@@ -1,11 +1,11 @@
 package com.sanedge.ecommercesimple.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sanedge.ecommercesimple.convert.CategoryToDto;
 import com.sanedge.ecommercesimple.exception.ResourceNotFoundException;
 import com.sanedge.ecommercesimple.models.Category;
 import com.sanedge.ecommercesimple.payload.request.CategoryRequest;
@@ -17,25 +17,36 @@ import com.sanedge.ecommercesimple.service.CategoryService;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
-    private final CategoryToDto categoryToDto;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryToDto categoryToDto) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        this.categoryToDto = categoryToDto;
     }
 
-    public List<CategoryResponse> findAll() {
-        List<Category> category = this.categoryRepository.findAll();
+    public MessageResponse findAll() {
+        List<Category> categories = this.categoryRepository.findAll();
 
-        return this.categoryToDto.mapCategoryToDtos(category);
+        List<CategoryResponse> categoryResponses = new ArrayList<>();
+
+        for (Category category : categories) {
+            CategoryResponse categoryResponse = new CategoryResponse(
+                    category.getId(), category.getName(), category.getColor(),
+                    category.getIcon(), category.getCreatedAt(), category.getUpdatedAt());
+
+            categoryResponses.add(categoryResponse);
+        }
+
+        return MessageResponse.builder().data(categoryResponses).build();
     }
 
-    public CategoryResponse findById(long id) {
+    public MessageResponse findById(long id) {
         Category _category = this.categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Not found Category id"));
 
-        return this.categoryToDto.mapCategoryToDto(_category);
+        CategoryResponse dto = new CategoryResponse(_category.getId(), _category.getName(), _category.getColor(),
+                _category.getIcon(), _category.getCreatedAt(), _category.getUpdatedAt());
+
+        return MessageResponse.builder().message("Berhasil mendapatkan data").data(dto).statusCode(200).build();
     }
 
     public MessageResponse create(CategoryRequest categoryRequest) {
@@ -46,7 +57,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         this.categoryRepository.save(_category);
 
-        return MessageResponse.builder().message("Success create category").build();
+        return MessageResponse.builder().message("Success create category").data(_category).statusCode(200).build();
     }
 
     public MessageResponse update(long id, CategoryRequest categoryRequest) {

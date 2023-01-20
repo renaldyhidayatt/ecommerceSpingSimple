@@ -11,13 +11,13 @@ import com.sanedge.ecommercesimple.payload.response.ProductResponse;
 
 public interface ProductService {
 
-    public List<ProductResponse> findAll();
+    public MessageResponse findAll();
 
     public MessageResponse createProduct(ProductRequest product, MultipartFile file);
 
-    public ProductResponse getProductById(long id);
+    public MessageResponse getProductById(long id);
 
-    public Product updateById(long id, ProductRequest productRequest, MultipartFile file);
+    public MessageResponse updateById(long id, ProductRequest productRequest, MultipartFile file);
 
     public MessageResponse delete(long id);
 

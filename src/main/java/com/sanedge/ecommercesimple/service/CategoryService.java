@@ -8,9 +8,9 @@ import com.sanedge.ecommercesimple.payload.response.MessageResponse;
 
 public interface CategoryService {
 
-    public List<CategoryResponse> findAll();
+    public MessageResponse findAll();
 
-    public CategoryResponse findById(long id);
+    public MessageResponse findById(long id);
 
     public MessageResponse create(CategoryRequest categoryRequest);
 

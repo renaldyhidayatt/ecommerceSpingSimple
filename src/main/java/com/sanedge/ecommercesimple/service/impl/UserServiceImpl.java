@@ -1,5 +1,6 @@
 package com.sanedge.ecommercesimple.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sanedge.ecommercesimple.payload.response.UserResponse;
-import com.sanedge.ecommercesimple.convert.UserToDto;
 import com.sanedge.ecommercesimple.enums.ERole;
 import com.sanedge.ecommercesimple.exception.ResourceNotFoundException;
 import com.sanedge.ecommercesimple.models.Role;
@@ -25,16 +25,13 @@ public class UserServiceImpl {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserToDto userToDto;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder,
-            UserToDto userToDto) {
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userToDto = userToDto;
     }
 
     public MessageResponse create(RegisterRequest registerRequest) {
@@ -76,21 +73,34 @@ public class UserServiceImpl {
         user.setRoles(roles);
         this.userRepository.save(user);
 
-        return MessageResponse.builder().message("Successs create user").build();
+        return MessageResponse.builder().message("Successs create user").data(user).statusCode(200).build();
 
     }
 
-    public UserResponse getUser(Long id) {
+    public MessageResponse getUser(Long id) {
         User user = this.userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found User"));
 
-        return this.userToDto.mapUserToDto(user);
+        return MessageResponse.builder().message("Berhasil mendapatkan data").data(user).statusCode(200).build();
     }
 
     @Transactional(readOnly = true)
-    public List<UserResponse> getAllUsers() {
+    public MessageResponse getAllUsers() {
         List<User> _users = this.userRepository.findAll();
+        List<UserResponse> usersResponse = new ArrayList<>();
 
-        return this.userToDto.mapUserToDtos(_users);
+        for (User user : _users) {
+            UserResponse userResponse = new UserResponse();
+            userResponse.setId(user.getId());
+            userResponse.setUsername(user.getUsername());
+            userResponse.setEmail(user.getEmail());
+            userResponse.setRoles(user.getRoles());
+
+            usersResponse.add(userResponse);
+
+        }
+
+        return MessageResponse.builder().message("Berhasil mendapatkan data").data(usersResponse).statusCode(200)
+                .build();
     }
 
     public MessageResponse updateById(long id, RegisterRequest registerRequest) {
@@ -131,7 +141,7 @@ public class UserServiceImpl {
         _user.setRoles(roles);
         this.userRepository.save(_user);
 
-        return MessageResponse.builder().message("Successs create user").build();
+        return MessageResponse.builder().message("Successs update user").data(_user).statusCode(200).build();
     }
 
     public MessageResponse deleteById(long id) {
@@ -140,6 +150,6 @@ public class UserServiceImpl {
 
         this.userRepository.delete(_user);
 
-        return MessageResponse.builder().message("Success delete user ").build();
+        return MessageResponse.builder().message("Success delete user ").statusCode(200).build();
     }
 }
